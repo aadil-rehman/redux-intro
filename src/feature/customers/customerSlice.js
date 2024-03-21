@@ -1,34 +1,64 @@
-const initialStateCustomer = {
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
 	fullname: "",
 	nationalId: "",
 	createdAt: "",
 };
 
-export default function customerReducer(state = initialStateCustomer, action) {
-	switch (action.type) {
-		case "customer/createCustomer":
-			return {
-				...state,
-				fullname: action.payload.fullname,
-				nationalId: action.payload.nationalId,
-				createdAt: action.payload.createdAt,
-			};
+const customerSlice = createSlice({
+	name: "customer",
+	initialState,
+	reducers: {
+		createCustomer: {
+			prepare(name, id) {
+				return {
+					payload: { name, id, createdAt: new Date().toISOString() },
+				};
+			},
 
-		case "customer/updateName":
-			return { ...state, fullname: action.payload };
+			reducer(state, action) {
+				state.fullname = action.payload.fullname;
+				state.nationalId = action.payload.nationalId;
+				state.createdAt = action.payload.createdAt;
+			},
+		},
 
-		default:
-			return state;
-	}
-}
+		updateName(state, action) {
+			state.fullname = action.payload;
+		},
+	},
+});
 
-export function createCustomer(fullname, nationalId) {
-	return {
-		type: "customer/createCustomer",
-		payload: { fullname, nationalId, createdAt: new Date().toISOString() },
-	};
-}
+export const { createCustomer, updateName } = customerSlice.actions;
 
-export function updateName(fullname) {
-	return { type: "customer/updateName", payload: fullname };
-}
+export default customerSlice.reducer;
+
+// export default function customerReducer(state = initialStateCustomer, action) {
+// 	switch (action.type) {
+// 		case "customer/createCustomer":
+// 			return {
+// 				...state,
+// 				fullname: action.payload.fullname,
+// 				nationalId: action.payload.nationalId,
+// 				createdAt: action.payload.createdAt,
+// 			};
+
+// 		case "customer/updateName":
+// 			return { ...state, fullname: action.payload };
+
+// 		default:
+// 			return state;
+// 	}
+// }
+
+// export function createCustomer(fullname, nationalId) {
+// 	return {
+// 		type: "customer/createCustomer",
+// 		payload: { fullname, nationalId, createdAt: new Date().toISOString() },
+// 	};
+// }
+
+// export function updateName(fullname) {
+// 	return { type: "customer/updateName", payload: fullname };
+// }
